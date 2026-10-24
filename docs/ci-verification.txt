@@ -1,0 +1,2 @@
+GitHub Actions CI verification
+Backend tests and Angular build passed successfully.
