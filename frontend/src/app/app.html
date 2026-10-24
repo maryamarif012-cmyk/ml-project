@@ -1,0 +1,130 @@
+
+<div class="container">
+  <h1>Diabetes Readmission Prediction</h1>
+
+  <p>
+    Enter patient information to request a prediction from the ML model.
+  </p>
+
+  <form #patientForm="ngForm" (ngSubmit)="predict()">
+
+    <label for="age">Age category</label>
+    <select id="age" name="age" [(ngModel)]="age" required>
+      <option value="[0-10)">0–10</option>
+      <option value="[10-20)">10–20</option>
+      <option value="[20-30)">20–30</option>
+      <option value="[30-40)">30–40</option>
+      <option value="[40-50)">40–50</option>
+      <option value="[50-60)">50–60</option>
+      <option value="[60-70)">60–70</option>
+      <option value="[70-80)">70–80</option>
+      <option value="[80-90)">80–90</option>
+      <option value="[90-100)">90–100</option>
+    </select>
+
+    <label for="gender">Gender</label>
+    <select id="gender" name="gender" [(ngModel)]="gender" required>
+      <option value="Female">Female</option>
+      <option value="Male">Male</option>
+      <option value="Unknown/Invalid">Unknown/Invalid</option>
+    </select>
+
+    <label for="admissionType">Admission type ID</label>
+    <select
+      id="admissionType"
+      name="admission_type_id"
+      [(ngModel)]="admissionType"
+      required>
+      <option [ngValue]="1">1 - Emergency</option>
+      <option [ngValue]="2">2 - Urgent</option>
+      <option [ngValue]="3">3 - Elective</option>
+      <option [ngValue]="4">4 - Newborn</option>
+      <option [ngValue]="5">5 - Not Available</option>
+      <option [ngValue]="6">6 - Null</option>
+      <option [ngValue]="7">7 - Trauma Center</option>
+      <option [ngValue]="8">8 - Not Mapped</option>
+    </select>
+
+    <label for="inpatient">Number of inpatient visits</label>
+    <input
+      id="inpatient"
+      name="number_inpatient"
+      type="number"
+      min="0"
+      step="1"
+      [(ngModel)]="inpatient"
+      required>
+
+    <label for="emergency">Number of emergency visits</label>
+    <input
+      id="emergency"
+      name="number_emergency"
+      type="number"
+      min="0"
+      step="1"
+      [(ngModel)]="emergency"
+      required>
+
+    <label for="outpatient">Number of outpatient visits</label>
+    <input
+      id="outpatient"
+      name="number_outpatient"
+      type="number"
+      min="0"
+      step="1"
+      [(ngModel)]="outpatient"
+      required>
+
+    <p class="note">
+      Prototype: this request uses a sample dataset record as its base
+      and replaces the six displayed fields. This is not a complete
+      patient assessment or a clinically validated prediction.
+    </p>
+
+    <button
+      type="submit"
+      [disabled]="loading || loadingSample">
+      {{ loading
+          ? 'Predicting...'
+          : loadingSample
+            ? 'Loading patient data...'
+            : 'Predict Readmission' }}
+    </button>
+  </form>
+
+  <!-- Loading message below the button -->
+  <div *ngIf="loading" class="note" aria-live="polite">
+    Generating prediction, please wait...
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="errorMessage" class="note error" role="alert">
+    <strong>Message:</strong> {{ errorMessage }}
+  </div>
+
+  <!-- Prediction result below the button -->
+  <div
+    *ngIf="result"
+    class="result-card"
+    aria-live="polite">
+
+    <h2>Prediction Result</h2>
+
+    <p>
+      <strong>Result:</strong>
+      {{ result.interpretation }}
+    </p>
+
+    <p>
+      <strong>Early readmission probability:</strong>
+      {{ result.early_readmission_probability * 100 | number:'1.2-2' }}%
+    </p>
+
+    <p>
+      <strong>Predicted class:</strong>
+      {{ result.predicted_class }}
+    </p>
+
+    <p>{{ result.notice }}</p>
+  </div>
+</div>
